@@ -2,12 +2,26 @@
   "manifest_version": 3,
   "name": "Youtube跳过广告",
   "description": "自动点击跳过",
-  "version": "1.0",
-  "host_permission": "https://www.youtube.com/",
+  "version": "1.0.0",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "webNavigation"
+  ],
+  "host_permissions": [
+     "https://www.youtube.com/*"
+  ],
   "content_scripts": [
     {
       "matches": ["https://www.youtube.com/*"],
       "js": ["content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "resources": ["base.js"]
     }
   ],
   "action": {
@@ -16,6 +30,6 @@
   },
   "background": {
     "service_worker": "background.js"
-  },
-  "permissions": ["storage"]
+  }
+  
 }

@@ -1,7 +1,7 @@
 /*
  * @Author: puito123
  * @Date: 2024-12-01 11:47:42
- * @LastEditTime: 2024-12-01 15:56:43
+ * @LastEditTime: 2024-12-01 20:24:32
  * @LastEditors: puito123
  * @FilePath: \youtube\popup.js
  * @Description: 
@@ -10,12 +10,14 @@
  */
 
 window.onload = function() {
+    console.log("popup loaded");
     chrome.storage.sync.get("autoSkip", function(data) {
         document.getElementById("autoSkip").checked = data.autoSkip;
     });
 };
 
 document.getElementById("autoSkip").addEventListener("change", () => {
+    const value = document.getElementById("autoSkip").checked;
     chrome.storage.sync.set({
         autoSkip: value
     }, () => {
