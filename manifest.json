@@ -6,8 +6,7 @@
   "permissions": [
     "storage",
     "activeTab",
-    "scripting",
-    "webNavigation"
+    "scripting"
   ],
   "host_permissions": [
      "https://www.youtube.com/*"
@@ -16,12 +15,6 @@
     {
       "matches": ["https://www.youtube.com/*"],
       "js": ["content.js"]
-    }
-  ],
-  "web_accessible_resources": [
-    {
-      "matches": ["https://www.youtube.com/*"],
-      "resources": ["base.js"]
     }
   ],
   "action": {
