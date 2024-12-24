@@ -6,7 +6,7 @@
   "scripts": {
     "run": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "pkg server.js --targets node18-win-x64"
+    "build:exe": "pkg server.js --targets node18-win-x64"
   },
   "keywords": [],
   "author": "",
