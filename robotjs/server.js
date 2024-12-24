@@ -1,7 +1,7 @@
 /*
  * @Author: puito123
  * @Date: 2024-12-23 22:29:12
- * @LastEditTime: 2024-12-24 22:15:40
+ * @LastEditTime: 2024-12-24 22:33:55
  * @LastEditors: puito123
  * @FilePath: \youtube\robotjs\server.js
  * @Description: 
@@ -27,7 +27,7 @@ wss.on('connection', function connection(ws) {
                 console.log('Performing mouse click...');
                 // 调整坐标以适应屏幕缩放
                 const adjustedX = data.x; //1189 / scaleFactor;
-                const adjustedY = data.isVideoFullScreen ? data.y + 120: data.y;//769 / scaleFactor;
+                const adjustedY = data.isVideoFullScreen ? data.y : data.y + 120;//769 / scaleFactor;
                 console.log(`Adjusted coordinates: ${adjustedX}, ${adjustedY}`);
                 robot.moveMouse(adjustedX, adjustedY);
                 robot.mouseClick();

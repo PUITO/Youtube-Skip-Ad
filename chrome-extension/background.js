@@ -1,9 +1,9 @@
 /*
  * @Author: puito123
  * @Date: 2024-12-01 15:22:46
- * @LastEditTime: 2024-12-23 22:59:30
+ * @LastEditTime: 2024-12-24 22:39:27
  * @LastEditors: puito123
- * @FilePath: \youtube\background.js
+ * @FilePath: \youtube\chrome-extension\background.js
  * @Description: background.js：
  * 
     后台脚本文件，可以用来监听浏览器事件、与内容脚本通信、管理扩展的生命周期等。
@@ -61,7 +61,7 @@ ws.onclose = () => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'clickMouse') {
     console.log('Click mouse action received with coordinates:', request.x, request.y);
-    ws.send(JSON.stringify({ action: 'click', x: request.x, y: request.y }));
+    ws.send(JSON.stringify({ action: 'click', x: request.x, y: request.y, isVideoFullScreen: request.isVideoFullScreen }));
     sendResponse({ status: 'success' });
   }
 });
