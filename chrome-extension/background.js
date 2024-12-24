@@ -1,7 +1,7 @@
 /*
  * @Author: puito123
  * @Date: 2024-12-01 15:22:46
- * @LastEditTime: 2024-12-22 14:03:52
+ * @LastEditTime: 2024-12-23 22:59:30
  * @LastEditors: puito123
  * @FilePath: \youtube\background.js
  * @Description: background.js：
@@ -41,4 +41,27 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
       });
     }
 }
+});
+
+/*********************    WebSocket           ***************************************/
+const ws = new WebSocket('ws://localhost:12000');
+
+ws.onopen = () => {
+  console.log('Connected to WebSocket server');
+};
+
+ws.onmessage = (event) => {
+  console.log('Message from server:', event.data);
+};
+
+ws.onclose = () => {
+  console.log('Disconnected from WebSocket server');
+};
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === 'clickMouse') {
+    console.log('Click mouse action received with coordinates:', request.x, request.y);
+    ws.send(JSON.stringify({ action: 'click', x: request.x, y: request.y }));
+    sendResponse({ status: 'success' });
+  }
 });
