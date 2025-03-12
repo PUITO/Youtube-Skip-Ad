@@ -1,7 +1,7 @@
 /*
  * @Author: puito123
  * @Date: 2024-12-01 15:22:46
- * @LastEditTime: 2024-12-24 22:39:27
+ * @LastEditTime: 2025-03-11 17:17:50
  * @LastEditors: puito123
  * @FilePath: \youtube\chrome-extension\background.js
  * @Description: background.js：
@@ -58,10 +58,21 @@ ws.onclose = () => {
   console.log('Disconnected from WebSocket server');
 };
 
+// 消息缓冲队列
+const messageQueue = [];
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'clickMouse') {
     console.log('Click mouse action received with coordinates:', request.x, request.y);
-    ws.send(JSON.stringify({ action: 'click', x: request.x, y: request.y, isVideoFullScreen: request.isVideoFullScreen }));
+    const message = { action: 'click', x: request.x, y: request.y, isVideoFullScreen: request.isVideoFullScreen };
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify(message));
+    } else if (ws.readyState === WebSocket.CONNECTING) {
+      // 如果 WebSocket 连接仍在 CONNECTING 状态，将消息缓冲起来
+      messageQueue.push(message);
+    } else {
+      console.error('WebSocket is not open or connecting, cannot send message');
+    }
     sendResponse({ status: 'success' });
   }
 });

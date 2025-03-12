@@ -1,20 +1,20 @@
 /*
  * @Author: puito123
  * @Date: 2024-12-22 13:45:58
- * @LastEditTime: 2024-12-24 22:23:48
+ * @LastEditTime: 2025-03-11 17:23:49
  * @LastEditors: puito123
  * @FilePath: \youtube\chrome-extension\content.js
  * @Description: 
  */
 console.log('Content script loaded');
 
-let intervalId = null;
+intervalId = null;
 
-let lastSendTime = 0; //最后发送时间
-const sendInterval = 1000; // 发送间隔
-const maxSendsPerMinute = 5; // 最大发送次数
-let sendCount = 0; // 发送次数
-const resetInterval = 60000; // 1分钟
+lastSendTime = 0; //最后发送时间
+sendInterval = 1000; // 发送间隔
+maxSendsPerMinute = 5; // 最大发送次数
+sendCount = 0; // 发送次数
+resetInterval = 60000; // 1分钟
 
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -36,29 +36,10 @@ window.addEventListener('load', function () {
   chrome.storage.sync.get(['autoSkip'], function (result) {
     if (result.autoSkip) {
       startAutoClick();
+    } else {
+      stopAutoClick();
     }
   });
-
-  // // 查找所有的 <script> 标签
-  // const scripts = document.getElementsByTagName('script');
-
-  // for (let i = 0; i < scripts.length; i++) {
-  //   const script = scripts[i];
-
-  //   // 检查当前 <script> 标签的 src 属性
-  //   if (script.src.includes("base.js")) {
-  //     // 创建一个新的 <script> 标签
-  //     const newScript = document.createElement('script');
-  //     newScript.src = "base.js"; // 你的新脚本路径
-  //     newScript.nonce = ""; // 如果需要，可以设置 nonce
-  //     newScript.className = "js-httpswwwyoutubecomsplayerb46bb280player_iasvflsetzh_CNbasejs"; // 设置类名
-
-  //     // 替换旧的 <script> 标签
-  //     script.parentNode.replaceChild(newScript, script);
-
-  //     console.log('Replaced script:', script.src, 'with', newScript.src);
-  //   }
-  // }
 });
 
 
@@ -102,8 +83,8 @@ function getSkipBtn() {
     console.log("Clicking skip button...")
     // 获取按钮在屏幕上的位置
     const rect = btn.getBoundingClientRect();
-    const x = rect.left + rect.width / 2 + window.scrollX;
-    const y = rect.top + rect.height / 2 + window.scrollY;
+    const x = rect.left + rect.width / 2 + window.screenX;
+    const y = rect.top + rect.height / 2 + window.screenY;
     console.log(`跳过按钮坐标：(${x}, ${y})`);
 
 
@@ -111,9 +92,17 @@ function getSkipBtn() {
     const currentTime = Date.now();
     if (currentTime - lastSendTime >= sendInterval && sendCount < maxSendsPerMinute) {
       // 发送坐标给后台脚本
-      chrome.runtime.sendMessage({ action: 'clickMouse', x, y, isFullScreen, isVideoFullScreen }, (response) => {
-        console.log('Response from background:', response);
-      });
+      try {
+        chrome.runtime.sendMessage({ action: 'clickMouse', x, y, isFullScreen, isVideoFullScreen }, (response) => {
+          if (chrome.runtime.lastError) {
+            console.error('Failed to send message:', chrome.runtime.lastError);
+          } else {
+            console.log('Response from background:', response);
+          }
+        });
+      } catch (error) {
+
+      }
       lastSendTime = currentTime;
       sendCount++;
     } else {

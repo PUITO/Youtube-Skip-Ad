@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Youtube跳过广告",
   "description": "自动点击跳过",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "permissions": [
     "storage",
     "activeTab",
